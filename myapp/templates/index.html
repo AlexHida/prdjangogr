@@ -1,42 +1,33 @@
-{% extends "base.html" %}
-
-{% block title %}
-    Corrección Gramatical
-{% endblock %}
-
-{% load static %}
-
-{% block content %}
-    <div class="container mt-5">
-        <div class="bg-primary text-white p-3 rounded d-flex justify-content-center align-items-center">
-            
-            <!--<img src="{% static 'images/Firma.png' %}" alt="Icono de corrección" 
-            class="mr-3 img-fluid" style="max-height: 300px;">-->
-
-            <h1 class="mb-4">Corrección Gramatical en Inglés</h1>
-        </div>
-        <div class="bg-light p-3 rounded-bottom">
-            <form method="post" class="mb-4">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="texto">Texto en inglés:</label>
-                    <textarea class="form-control" name="texto" id="texto" cols="50" rows="5" maxlength="130"></textarea>
-                    <small class="form-text text-muted">Máximo 130 caracteres.</small>
-                </div>
-                <button type="submit" class="btn btn-primary">Corregir</button>
-            </form>
-            {% if resultado %}
-            <div class="mt-4">
-                <div class="bg-danger rounded text-white p-3">
-                    <h2>Texto original:</h2>
-                    <p>{{ texto_original }}</p>
-                </div>
-                <div class="bg-success rounded text-white p-3 mt-3">
-                    <h2>Texto corregido:</h2>
-                    <p>{{ resultado }}</p>
-                </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Corrección Gramatical</title>
+</head>
+<body>
+    <div style="margin: 20px;">
+        <h1>Corrección Gramatical en Inglés</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="texto">Texto en inglés:</label>
+            <br>
+            <textarea name="texto" cols="50" rows="5" maxlength="130"></textarea>
+            <br>
+            <small>Máximo 130 caracteres.</small>
+            <br>
+            <button type="submit">Corregir</button>
+        </form>
+        {% if resultado %}
+        <div style="margin-top: 20px;">
+            <div>
+                <h2>Texto original:</h2>
+                <p>{{ texto_original }}</p>
             </div>
-            {% endif %}
+            <div style="margin-top: 10px;">
+                <h2>Texto corregido:</h2>
+                <p>{{ resultado }}</p>
+            </div>
         </div>
+        {% endif %}
     </div>
-{% endblock %}
+</body>
+</html>
