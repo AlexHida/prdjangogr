@@ -2,32 +2,95 @@
 <html>
 <head>
     <title>Corrección Gramatical</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4
+            px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #007bff; /* Color azul para el encabezado */
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+        label, textarea, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 96%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+        small {
+            color: #999;
+        }
+        button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .result-original {
+            background-color: #e24141; /* Color rojo para el texto original */
+            border: 1px solid #7e0404;
+            margin-bottom: 10px;
+        }
+        .result-corrected {
+            background-color: #58df58; /* Color verde para el texto corregido */
+            border: 1px solid #00cc00;
+        }
+    </style>
 </head>
 <body>
-    <div style="margin: 20px;">
-        <h1>Corrección Gramatical en Inglés</h1>
+    <div class="container">
+        <div class="header">
+            <h1>Corrección Gramatical en Inglés</h1>
+        </div>
         <form method="post">
             {% csrf_token %}
             <label for="texto">Texto en inglés:</label>
-            <br>
             <textarea name="texto" cols="50" rows="5" maxlength="130"></textarea>
-            <br>
             <small>Máximo 130 caracteres.</small>
-            <br>
             <button type="submit">Corregir</button>
         </form>
         {% if resultado %}
-        <div style="margin-top: 20px;">
-            <div>
-                <h2>Texto original:</h2>
-                <p>{{ texto_original }}</p>
-            </div>
-            <div style="margin-top: 10px;">
-                <h2>Texto corregido:</h2>
-                <p>{{ resultado }}</p>
-            </div>
+        <div class="result result-original">
+            <h2>Texto original:</h2>
+            <p>{{ texto_original }}</p>
+        </div>
+        <div class="result result-corrected">
+            <h2>Texto corregido:</h2>
+            <p>{{ resultado }}</p>
         </div>
         {% endif %}
     </div>
 </body>
 </html>
+
