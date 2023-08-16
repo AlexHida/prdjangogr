@@ -1,11 +1,29 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="css/styl.css">
+
     <title>{% block title %}{% endblock %}</title>
     <!-- Agrega el enlace a Bootstrap aquí -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+
+        <img src="{% static "images/LogoGramatica.png"%}"
+        alt="logo principal" style="max-height: 40px;">
+        <div class="ml-auto"> 
+            <a href="">Inicio</a>
+      <span class="vertical-line mx-3"></span>
+            <a href="preguntas">Preguntas</a>
+            <span class="vertical-line mx-3"></span>
+            <a href="videos">Videos</a>
+            <span class="vertical-line mx-3"></span>
+            <a href="#">Ayuda</a>
+          </div>  
+      </nav>
+
     <div class="container">
         {% block content %}
         {% endblock %}

@@ -6,6 +6,14 @@ API_TOKEN = "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"
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
+def videos(request):
+    # Lógica de la vista para la página "videos.html"
+    return render(request, 'videos.html')
+
+def preguntas(request):
+    return render(request, 'preguntas.html')
+
+
 def corregir_gramatica(input_text):
     payload = {"inputs": input_text}
     response = requests.post(API_URL, headers=headers, json=payload)
