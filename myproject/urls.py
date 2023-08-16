@@ -19,6 +19,6 @@ from myapp import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-     path('videos/', views.videos, name='videos'),
-      path('preguntas/', views.preguntas, name='preguntas'),
+    path('qa/', views.qa_index, name='qa_index'),
+    path('videos/', views.videos_index, name='videos_index'),
 ]
