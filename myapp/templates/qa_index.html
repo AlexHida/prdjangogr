@@ -1,34 +1,35 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %} Preguntas y Respuestas {% endblock%}
+{% load static %} {% block content %} {% include 'nav.html' %}
 
-{% block title %}
-    Preguntas y Respuestas
-{% endblock %}
-
-{% block content %}
-    {% include 'nav.html' %}
-    <div class="container" style="margin-top: 70px;">
-            <div class="bg-primary text-white p-1 rounded d-flex justify-content-center align-items-center">
-                 <h1 class="mb-4">Preguntas y Respuestas</h1>
-            </div>
-            <div class="bg-light p-3 rounded-bottom">
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="contexto">Contexto:</label>
-                    <textarea class="form-control" name="contexto" id="contexto" cols="50" rows="5"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="pregunta">Pregunta:</label>
-                    <input type="text" class="form-control" name="pregunta" id="pregunta">
-                </div>
-                <button type="submit" class="btn btn-primary">Responder</button>
-            </form>
-        </div>
-        {% if respuesta %}
-        <div class="mt-4">
-            <h2>Respuesta:</h2>
-            <p>{{ respuesta }}</p>
-        </div>
-        {% endif %}
-    </div>
+<div class="container esp">
+  <div class="divTitle">
+    <h1>Preguntas y Respuestas</h1>
+  </div>
+  <div class="bg-light p-3 rounded-bottom mt-1 myBorder">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="contexto">Contexto:</label>
+        <textarea
+          class="form-control"
+          name="contexto"
+          id="contexto"
+          cols="50"
+          rows="5"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="pregunta">Pregunta:</label>
+        <input type="text" class="form-control" name="pregunta" id="pregunta" />
+      </div>
+      <button type="submit" class="btn btn-primary">Responder</button>
+    </form>
+  </div>
+  {% if respuesta %}
+  <div class="mt-4">
+    <h2>Respuesta:</h2>
+    <p>{{ respuesta }}</p>
+  </div>
+  {% endif %}
+</div>
 {% endblock %}

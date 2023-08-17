@@ -16,3 +16,34 @@
     column-count: 6; 
     column-gap: 20px; /
 }
+
+.myBorder {
+    border: 2px solid #808080; 
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.divTitle {
+    border: 2px solid #c0bfbf; 
+    border-radius: 10px;
+    background-color: #5a5a5ae8;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.styleNav {
+    border: 2px solid #ced1d3c2; 
+    background-color: #969da1de;
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.colortextNav {
+    color: white;
+}
+
+.esp {
+    margin-top: 75px;
+}
