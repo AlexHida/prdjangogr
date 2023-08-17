@@ -1,4 +1,18 @@
 /* style de la imagen */
 .imgStyle {
-    max-height: 10px;
+    max-height: 50px;
+}
+.imgStyleIco {
+    max-height: 30px;
+}
+.separador {
+    width: 1px;
+    height: 50px; 
+    background-color: #797878; 
+    margin: 0 10px;
+}
+
+.column-container {
+    column-count: 6; 
+    column-gap: 20px; /
 }

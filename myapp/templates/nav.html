@@ -1,7 +1,18 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
+{% load static %}
+
+<nav class="navbar fixed-top navbar-dark bg-dark">
+        <img src="{% static 'images/LogoGramatica2.png' %}" alt="Icono de corrección" 
+            class="imgStyle">
+        <div class="d-flex justify-content-end">
         <a class="navbar-brand" href="{% url 'index' %}">Inicio</a>
+        <div class="separador"></div>
+         <a class="navbar-brand" href="{% url 'corrector' %}">Corregir Gramatica</a>
+         <div class="separador"></div>   
         <a class="navbar-brand" href="{% url 'qa_index' %}">Preguntas y Respuestas</a>
+        <div class="separador"></div>
         <a class="navbar-brand" href="{% url 'videos_index' %}">Videos</a>
-    </div>
+        <div class="separador"></div>
+        <a class="navbar-brand" href="{% url 'ayuda' %}">Ayuda</a>
 </nav>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">

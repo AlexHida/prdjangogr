@@ -1,47 +1,53 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %} Corrección Gramatical {% endblock %}
+{% load static %} {% block content %} {% include 'nav.html' %}
 
+<div class="container" style="margin-top: 70px">
+  <div class="rounded d-flex justify-content-center align-items-center">
+    <img
+      src="{% static 'images/LogoGramatica.png' %}"
+      alt="Icono de corrección"
+      style="max-height: 200px"
+    />
+  </div>
+  <div class="bg-light p-3">
+    <h6 class="text-center">¡Bienvenidos a English Grammar Guardian!</h6>
+    <h3 class="text-center">Tu Compañero Inteligente para el Aprendizaje del Inglés</h3>
+    <h6 class="text-center">
+      ¡Descubre la herramienta definitiva para mejorar tus habilidades de
+      redacción en inglés! English Grammar Guardian es un sistema inteligente de
+      apoyo al aprendizaje diseñado para elevar tus capacidades lingüísticas de
+      manera fácil y efectiva.</h6>
+    <h5><strong>Características Destacadas:</strong></h5>
 
-{% block title %}
-    Corrección Gramatical
-{% endblock %}
-
-{% load static %}
-
-{% block content %}
-
-    {% include 'nav.html' %}
-
-    <div class="container mt-5 " >
-        <div class="bg-primary text-white p-1 rounded d-flex justify-content-center align-items-center"
-        style="margin-top: 65px">
-            
-            <!--<img src="{% static 'images/Firma.png' %}" alt="Icono de corrección" 
-            class="mr-3 img-fluid" style="max-height: 300px;">-->
-
-            <h1 class="mb-4">Corrección de Gramatica</h1>
-        </div>
-        <div class="bg-light p-3 rounded-bottom">
-            <form method="post" class="mb-4">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="texto">Texto en inglés:</label>
-                    <textarea class="form-control" name="texto" id="texto" cols="50" rows="5" maxlength="130"></textarea>
-                    <small class="form-text text-muted">Máximo 130 caracteres.</small>
-                </div>
-                <button type="submit" class="btn btn-primary">Corregir</button>
-            </form>
-            {% if resultado %}
-            <div class="mt-4">
-                <div class="bg-danger rounded text-white p-3">
-                    <h2>Texto original:</h2>
-                    <p>{{ texto_original }}</p>
-                </div>
-                <div class="bg-success rounded text-white p-3 mt-3">
-                    <h2>Texto corregido:</h2>
-                    <p>{{ resultado }}</p>
-                </div>
+        <div class="row text-center">
+            <div class="col-md-2">
+                <img src="{% static 'images/InterfazAmigable.png' %}" class="imgStyle">
+                <h6>Interfaz Amigable y Fácil de Usar</h6>
             </div>
-            {% endif %}
-        </div>
+            <div class="col-md-2">
+                <img src="{% static 'images/Retroalimentación.png' %}" class="imgStyle">
+                <h6>Retroalimentación en Tiempo Real</h6>
+            </div>
+            <div class="col-md-2">
+                <img src="{% static 'images/VideosDidácticos.png' %}" class="imgStyle">
+                <h6>Apartado de Videos Didácticos</h6>
+            </div>
+            <div class="col-md-2">
+                <img src="{% static 'images/CorrectorGramática.png' %}" class="imgStyle">
+                <h6>Corrector de Gramática Avanzado</h6>
+            </div>
+            <div class="col-md-2">
+                <img src="{% static 'images/Analizador.png' %}" class="imgStyle">
+                <h6>Analizador de Texto Inteligente</h6>
+            </div>
+            <div class="col-md-2">
+                <img src="{% static 'images/Ayuda.png' %}" class="imgStyle">
+                <h6>Centro de Ayuda a tu Alcance</h6>
+            </div>
+     
     </div>
+  </div>
+</div>
 {% endblock %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
