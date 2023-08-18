@@ -1,16 +1,25 @@
+from googleapiclient.discovery import build
 from django.shortcuts import render
 import requests
 
-API_URL = "https://api-inference.huggingface.co/models/grammarly/coedit-large"
-API_TOKEN = "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"
-
-QA_API_URL = "https://api-inference.huggingface.co/models/deepset/roberta-base-squad2"
-QA_HEADERS = {"Authorization": "Bearer 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"}
+#Correción Gramatical
+API_URL = "https://api-inference.huggingface.co/models/pszemraj/grammar-synthesis-base"
+API_TOKEN = "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"
+#Preguntas y Respuestas
+QA_API_URL = "https://api-inference.huggingface.co/models/IProject-10/xlm-roberta-base-finetuned-squad2"
+QA_HEADERS = {"Authorization": f"Bearer {API_TOKEN}"}
+#Clave YouTube
+YOUTUBE_API_KEY = "AIzaSyD7vY_shdAc7UCBzfalnzFQlQ904XrVP0w"
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
+
 def videos_index(request):
-    return render(request, 'videos_index.html')
+    channel_id = "UCzdHLjHljz5eR1UnmznUH7w"  # ID del canal específico
+    videos = get_youtube_videos(channel_id)
+
+    return render(request, 'videos_index.html', {'videos': videos})
+
 
 def ayuda(request):
     return render(request, 'ayuda.html')
@@ -48,6 +57,26 @@ def hacer_pregunta(contexto, pregunta):
         answer = "No se pudo obtener una respuesta"
 
     return answer
+
+def get_youtube_videos(channel_id, max_results=10):
+    youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
+    search_response = youtube.search().list(
+        channelId=channel_id,
+        type="video",
+        part="id,snippet",
+        maxResults=max_results
+    ).execute()
+
+    videos = []
+    for search_result in search_response.get("items", []):
+        video = {
+            "title": search_result["snippet"]["title"],
+            "video_id": search_result["id"]["videoId"],
+        }
+        videos.append(video)
+
+    return videos
+
 
 def index(request):
     return render(request, 'index.html')

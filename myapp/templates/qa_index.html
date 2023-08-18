@@ -1,35 +1,47 @@
-{% extends "base.html" %} {% block title %} Preguntas y Respuestas {% endblock%}
-{% load static %} {% block content %} {% include 'nav.html' %}
+{% extends "base.html" %}
 
-<div class="container esp">
-  <div class="divTitle">
-    <h1>Preguntas y Respuestas</h1>
-  </div>
-  <div class="bg-light p-3 rounded-bottom mt-1 myBorder">
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="contexto">Contexto:</label>
-        <textarea
-          class="form-control"
-          name="contexto"
-          id="contexto"
-          cols="50"
-          rows="5"
-        ></textarea>
-      </div>
-      <div class="form-group">
-        <label for="pregunta">Pregunta:</label>
-        <input type="text" class="form-control" name="pregunta" id="pregunta" />
-      </div>
-      <button type="submit" class="btn btn-primary">Responder</button>
-    </form>
-  </div>
-  {% if respuesta %}
-  <div class="mt-4">
-    <h2>Respuesta:</h2>
-    <p>{{ respuesta }}</p>
-  </div>
-  {% endif %}
-</div>
+{% block title %}
+    Preguntas y Respuestas
 {% endblock %}
+
+{% load static %}
+
+{% block content %}
+    {% include 'nav.html' %}
+
+    <div class="container esp">
+        <div class="divTitle">
+            <h1>Preguntas y Respuestas</h1>
+        </div>
+        <div class="bg-light p-3 rounded-bottom mt-1 myBorder">
+            <form method="post" id="pregunta-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="contexto">Contexto:</label>
+                    <textarea class="form-control" name="contexto" id="contexto" cols="50" rows="5">{{ request.POST.contexto }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="pregunta">Pregunta:</label>
+                    <input type="text" class="form-control" name="pregunta" id="pregunta" value="{{ request.POST.pregunta }}" />
+                </div>
+                <button type="submit" class="btn btn-primary" id="pregunta-button">Responder</button>
+            </form>
+        </div>
+        {% if respuesta %}
+        <div class="mt-4">
+            <div class="bg-info rounded p-3">
+                <h2>Respuesta:</h2>
+                <p>{{ respuesta }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('pregunta-form').addEventListener('submit', function() {
+            showLoadingIndicator('pregunta-button');
+        });
+    </script>
+{% endblock %}
+
+

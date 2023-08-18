@@ -1,8 +1,8 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/styl.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styl.css' %}">
 
     <title>{% block title %}{% endblock %}</title>
     <!-- Agrega el enlace a Bootstrap aquí -->
@@ -13,5 +13,26 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <div id="loading-indicator" class="text-center" style="display: none;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Cargando...</span>
+        </div>
+        <p>Cargando modelo...</p>
+    </div>
+
+    <script>
+        function showLoadingIndicator(buttonId) {
+            document.getElementById('loading-indicator').style.display = 'block';
+            document.getElementById(buttonId).disabled = true;
+        }
+
+        function hideLoadingIndicator(buttonId) {
+            document.getElementById('loading-indicator').style.display = 'none';
+            document.getElementById(buttonId).disabled = false;
+        }
+
+        // Agrega los listeners de eventos para los formularios aquí
+    </script>
 </body>
 </html>

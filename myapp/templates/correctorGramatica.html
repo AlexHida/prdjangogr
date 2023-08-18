@@ -1,48 +1,60 @@
-{% extends "base.html" %} {% block title %} Corrección Gramatical {% endblock %}
-{% load static %} {% block content %} {% include 'nav.html' %}
+{% extends "base.html" %}
 
-<div class="container esp">
-  <div class="divTitle">
-    <h1>Corrección de Gramatica</h1>
-  </div>
-  <div class="bg-light p-3 mt-1 rounded-bottom myBorder" >
-    <div class="row">
-        <div class="col-md-6">
-            <form method="post" class="mb-4">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="texto">Texto en inglés:</label>
-                  <textarea
-                    class="form-control"
-                    name="texto"
-                    id="texto"
-                    cols="50"
-                    rows="5"
-                    maxlength="130"
-                  ></textarea>
-                  <small class="form-text text-muted">Máximo 130 caracteres.</small>
-                </div>
-                <button type="submit" class="btn btn-primary">Corregir</button>
-              </form>
-            
+{% block title %}
+    Corrección Gramatical
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+    {% include 'nav.html' %}
+
+    <div class="container esp">
+        <div class="divTitle">
+            <h1>Corrección de Gramática</h1>
         </div>
-        <div class="col-md-6">
-            {% if resultado %}
-            <div class="mt-4">
-              <div class="bg-danger rounded text-white p-3">
-                <h2>Texto original:</h2>
-                <p>{{ texto_original }}</p>
-              </div>
-              <div class="bg-success rounded text-white p-3 mt-3">
-                <h2>Texto corregido:</h2>
-                <p>{{ resultado }}</p>
-              </div>
+        <div class="bg-light p-3 mt-1 rounded-bottom myBorder">
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" class="mb-4" id="corregir-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="texto">Texto en inglés:</label>
+                            <textarea
+                                class="form-control"
+                                name="texto"
+                                id="texto"
+                                cols="50"
+                                rows="5"
+                                maxlength="130"
+                            ></textarea>
+                            <small class="form-text text-muted">Máximo 130 caracteres.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="corregir-button">Corregir</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    {% if resultado %}
+                    <div class="mt-4">
+                        <div class="bg-danger rounded text-white p-3">
+                            <h2>Texto original:</h2>
+                            <p>{{ texto_original }}</p>
+                        </div>
+                        <div class="bg-success rounded text-white p-3 mt-3">
+                            <h2>Texto corregido:</h2>
+                            <p>{{ resultado }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            {% endif %}
-            
         </div>
     </div>
 
-  </div>
-</div>
+    <script>
+        document.getElementById('corregir-form').addEventListener('submit', function() {
+            showLoadingIndicator('corregir-button');
+        });
+    </script>
 {% endblock %}
+
