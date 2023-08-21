@@ -13,6 +13,12 @@
         <div class="divTitle">
             <h1>Corrección de Gramática</h1>
         </div>
+        <div class="alert alert-info mt-4" style="font-size: 14px;">
+            <p>Bienvenido al módulo de corrección gramatical. Aquí puedes ingresar un texto en inglés
+                que deseas corregir. Solo tienes que escribir o pegar el texto en el campo proporcionado
+                y luego presionar el botón "Corregir" para obtener la respuesta.</p>
+            
+        </div>
         <div class="bg-light p-3 mt-1 rounded-bottom myBorder">
             <div class="row">
                 <div class="col-md-6">
@@ -27,7 +33,7 @@
                                 cols="50"
                                 rows="5"
                                 maxlength="130"
-                            ></textarea>
+                            >{{ request.POST.texto }}</textarea>
                             <small class="form-text text-muted">Máximo 130 caracteres.</small>
                         </div>
                         <button type="submit" class="btn btn-primary" id="corregir-button">Corregir</button>
@@ -35,16 +41,23 @@
                 </div>
                 <div class="col-md-6">
                     {% if resultado %}
-                    <div class="mt-4">
-                        <div class="bg-danger rounded text-white p-3">
-                            <h2>Texto original:</h2>
-                            <p>{{ texto_original }}</p>
+                        <div class="mt-4">
+                            <div class="bg-danger rounded text-white p-3">
+                                <h2>Texto original:</h2>
+                                <p>{{ texto_original }}</p>
+                            </div>
+                            <div class="bg-success rounded text-white p-3 mt-3">
+                                <h2>Texto corregido:</h2>
+                                <p>{{ resultado }}</p>
+                            </div>
+                            <script>
+                                var tieneResultado = true;
+                            </script>
                         </div>
-                        <div class="bg-success rounded text-white p-3 mt-3">
-                            <h2>Texto corregido:</h2>
-                            <p>{{ resultado }}</p>
-                        </div>
-                    </div>
+                    {% else %}
+                        <script>
+                            var tieneResultado = false;
+                        </script>
                     {% endif %}
                 </div>
             </div>
@@ -55,6 +68,14 @@
         document.getElementById('corregir-form').addEventListener('submit', function() {
             showLoadingIndicator('corregir-button');
         });
+
+        if (typeof tieneResultado !== 'undefined' && tieneResultado) {
+            hideLoadingIndicator('corregir-button');
+        }
+
+        function hideLoadingIndicator(buttonId) {
+            document.getElementById('loading-indicator').style.display = 'none';
+            document.getElementById(buttonId).disabled = false;
+        }
     </script>
 {% endblock %}
-

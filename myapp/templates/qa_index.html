@@ -13,35 +13,61 @@
         <div class="divTitle">
             <h1>Preguntas y Respuestas</h1>
         </div>
-        <div class="bg-light p-3 rounded-bottom mt-1 myBorder">
-            <form method="post" id="pregunta-form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="contexto">Contexto:</label>
-                    <textarea class="form-control" name="contexto" id="contexto" cols="50" rows="5">{{ request.POST.contexto }}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="pregunta">Pregunta:</label>
-                    <input type="text" class="form-control" name="pregunta" id="pregunta" value="{{ request.POST.pregunta }}" />
-                </div>
-                <button type="submit" class="btn btn-primary" id="pregunta-button">Responder</button>
-            </form>
+
+        <div class="alert alert-info mt-4" style="font-size: 14px;">
+            <p>Bienvenido al módulo de Preguntas y Respuestas. Aquí puedes realizar preguntas en base a un contexto o párrafo dado. Ingresa el párrafo en el campo "Contexto" y la pregunta que deseas realizar en el campo "Pregunta". Luego, presiona el botón "Responder" para obtener la respuesta.</p>
+            <p>Recuerda que las respuestas se generan en función del contexto proporcionado, por lo que es importante asegurarse de que la pregunta esté relacionada con el contexto para obtener resultados precisos.</p>
         </div>
-        {% if respuesta %}
-        <div class="mt-4">
-            <div class="bg-info rounded p-3">
-                <h2>Respuesta:</h2>
-                <p>{{ respuesta }}</p>
+
+        <div class="bg-light p-3 rounded-bottom mt-3 myBorder">
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" id="pregunta-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="contexto" style="font-size: 14px;">Contexto:</label>
+                            <textarea class="form-control" name="contexto" id="contexto" cols="50" rows="3" style="font-size: 14px;">{{ request.POST.contexto }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="pregunta" style="font-size: 14px;">Pregunta:</label>
+                            <input type="text" class="form-control" name="pregunta" id="pregunta" value="{{ request.POST.pregunta }}" style="font-size: 14px;" />
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="pregunta-button" style="font-size: 14px;">Responder</button>
+                    </form>
+                </div>
+                <div class="col-md-6 justify-content-center">
+                    {% if respuesta %}
+                    <div class="mt-4">
+                        <div class="bg-info rounded text-white p-3 mt-4">
+                            <h2 style="font-size: 16px;">Respuesta:</h2>
+                            <p style="font-size: 14px;">{{ respuesta }}</p>
+                        </div>
+                        <script>
+                            var tieneRespuesta = true;
+                        </script>
+                    </div>
+                    {% else %}
+                        <script>
+                            var tieneRespuesta = false;
+                        </script>
+                    {% endif %}
+                </div>
             </div>
         </div>
-        {% endif %}
     </div>
 
     <script>
         document.getElementById('pregunta-form').addEventListener('submit', function() {
             showLoadingIndicator('pregunta-button');
         });
+
+        if (typeof tieneRespuesta !== 'undefined' && tieneRespuesta) {
+            hideLoadingIndicator('pregunta-button');
+        }
+
+        function hideLoadingIndicator(buttonId) {
+            document.getElementById('loading-indicator').style.display = 'none';
+            document.getElementById(buttonId).disabled = false;
+        }
     </script>
 {% endblock %}
-
-

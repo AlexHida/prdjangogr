@@ -27,13 +27,16 @@ def ayuda(request):
 def correctorGramatica(request):
     resultado = None
     texto_original = None
+    respuestaRecibida = False  # Inicializar la variable
     if request.method == 'POST':
         input_text = request.POST.get('texto', '')
         texto_original = input_text
         output = corregir_gramatica(input_text)
         if isinstance(output, list) and len(output) > 0:
             resultado = output[0].get('generated_text', '')
-    return render(request, 'correctorGramatica.html', {'resultado': resultado, 'texto_original': texto_original})
+            respuestaRecibida = bool(resultado)  # Actualizar la variable
+
+    return render(request, 'correctorGramatica.html', {'resultado': resultado, 'texto_original': texto_original, 'respuestaRecibida': respuestaRecibida})
 
 
 def corregir_gramatica(input_text):

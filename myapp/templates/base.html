@@ -22,17 +22,31 @@
     </div>
 
     <script>
+        var respuestaRecibida = false;  // Agrega esta variable al principio del script
+    
         function showLoadingIndicator(buttonId) {
             document.getElementById('loading-indicator').style.display = 'block';
             document.getElementById(buttonId).disabled = true;
         }
-
+    
         function hideLoadingIndicator(buttonId) {
             document.getElementById('loading-indicator').style.display = 'none';
             document.getElementById(buttonId).disabled = false;
         }
-
-        // Agrega los listeners de eventos para los formularios aquí
+    
+        document.getElementById('corregir-form').addEventListener('submit', function() {
+            respuestaRecibida = false;  // Reinicia la variable antes de enviar el formulario
+            showLoadingIndicator('corregir-button');
+        });
+    
+        document.getElementById('pregunta-form').addEventListener('submit', function() {
+            respuestaRecibida = false;  // Reinicia la variable antes de enviar el formulario
+            showLoadingIndicator('pregunta-button');
+        });
+    
+        // Para ocultar el indicador de carga y habilitar el botón después de recibir la respuesta
+        // en las vistas de Django, puedes agregar un código similar al final de las respuestas.
     </script>
+    
 </body>
 </html>
