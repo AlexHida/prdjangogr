@@ -1,18 +1,21 @@
 {% load static %}
 
 <nav class="navbar fixed-top styleNav">
-        <img src="{% static 'images/LogoGramatica2.png' %}" alt="Icono de corrección" 
-            class="imgStyle">
-        <div class="d-flex justify-content-end">
+    <img src="{% static 'images/LogoGramatica2.png' %}" alt="Icono de corrección" 
+        class="imgStyle">
+    <div class="d-flex justify-content-end">
         <a class="navbar-brand colortextNav" href="{% url 'index' %}">Inicio</a>
         <div class="separador"></div>
-         <a class="navbar-brand colortextNav" href="{% url 'corrector' %}">Corregir Gramatica</a>
-         <div class="separador"></div>   
+        <a class="navbar-brand colortextNav" href="{% url 'corrector' %}">Corregir Gramatica</a>
+        <div class="separador"></div>   
         <a class="navbar-brand colortextNav" href="{% url 'qa_index' %}">Preguntas y Respuestas</a>
         <div class="separador"></div>
         <a class="navbar-brand colortextNav" href="{% url 'videos_index' %}">Videos</a>
         <div class="separador"></div>
         <a class="navbar-brand colortextNav" href="{% url 'ayuda' %}">Ayuda</a>
+        <div class="separador"></div>
+        <a class="navbar-brand colortextNav" href="{% url 'login' %}">Cerrar sesión</a>
+    </div>
 </nav>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">

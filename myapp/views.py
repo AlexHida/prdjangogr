@@ -1,5 +1,6 @@
 from googleapiclient.discovery import build
 from django.shortcuts import render
+from django.shortcuts import redirect
 import requests
 
 #Correción Gramatical
@@ -13,6 +14,24 @@ YOUTUBE_API_KEY = "AIzaSyD7vY_shdAc7UCBzfalnzFQlQ904XrVP0w"
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
+def index(request):
+    return render(request, 'index.html')
+def vista_docente(request):
+    return render(request, 'docente.html')
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Verifica las credenciales (ejemplo con nombre de usuario y contraseña hardcodeados)
+        if username == 'docente' and password == 'doct1234':
+            return redirect('docente')  # Redirige a la vista docente
+        elif username == 'student' and password == '1234':
+            return redirect('index')  # Redirige a la vista index para el estudiante
+        else:
+            return render(request, 'login.html', {'login_failed': True})
+
+    return render(request, 'login.html')
 
 def videos_index(request):
     channel_id = "UCzdHLjHljz5eR1UnmznUH7w"  # ID del canal específico
