@@ -1,6 +1,10 @@
 from googleapiclient.discovery import build
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User, Group
+from .forms import EstudianteForm
+from .models import Estudiante
 import requests
 
 #Correción Gramatical
@@ -15,23 +19,54 @@ YOUTUBE_API_KEY = "AIzaSyD7vY_shdAc7UCBzfalnzFQlQ904XrVP0w"
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
 def index(request):
-    return render(request, 'index.html')
-def vista_docente(request):
-    return render(request, 'docente.html')
-def login(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if user.groups.filter(name='Estudiantes').exists():
+            estudiante = Estudiante.objects.get(usua=user.username)
+            estudiante.asistencia += 1
+            estudiante.save()
+
+            # Redirige a la plantilla 'index.html' si el usuario es estudiante
+            return render(request, 'index.html', {'estudiante': estudiante})
+
+    estudiantes = Estudiante.objects.all()
+    return render(request, 'home.html', {'estudiantes': estudiantes})
+
+#def vista_docente(request):
+    #return render(request, 'docente.html')
+
+def register_estudiante(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        form = EstudianteForm(request.POST)
+        if form.is_valid():
+            estudiante = form.save()  # Guarda el estudiante en la base de datos
+            user = User.objects.create_user(username=estudiante.usua, password=estudiante.pass1)
+            estudiante.user = user
+            estudiante.save()
 
-        # Verifica las credenciales (ejemplo con nombre de usuario y contraseña hardcodeados)
-        if username == 'docente' and password == 'doct1234':
-            return redirect('docente')  # Redirige a la vista docente
-        elif username == 'student' and password == '1234':
-            return redirect('index')  # Redirige a la vista index para el estudiante
-        else:
-            return render(request, 'login.html', {'login_failed': True})
+            # Asigna al estudiante al grupo "Estudiantes" (si no existe, créalo en el panel de administración)
+            group, created = Group.objects.get_or_create(name='Estudiantes')
+            user.groups.add(group)
 
-    return render(request, 'login.html')
+            login(request, user)  # Inicia sesión automáticamente después del registro
+            return redirect('index')  # Cambia 'home' por la URL deseada después del registro
+    else:
+        form = EstudianteForm()
+    return render(request, 'register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return redirect('index')  # Redirige a la página de inicio después de iniciar sesión
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login') 
 
 def videos_index(request):
     channel_id = "UCzdHLjHljz5eR1UnmznUH7w"  # ID del canal específico
@@ -99,9 +134,6 @@ def get_youtube_videos(channel_id, max_results=10):
 
     return videos
 
-
-def index(request):
-    return render(request, 'index.html')
 
 def qa_index(request):
     respuesta = None

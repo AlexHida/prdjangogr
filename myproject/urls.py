@@ -18,11 +18,14 @@ from django.urls import path
 from myapp import views
 
 urlpatterns = [
-    path('', views.login, name='login'),  # Página de inicio es el login
+    path('', views.login_view, name='login'),  # Página de inicio es el login
     path('index/', views.index, name='index'),  # Vista para index.html
+    path('admin/', admin.site.urls),
     path('qa/', views.qa_index, name='qa_index'),
     path('videos/', views.videos_index, name='videos_index'),
     path('corrector/', views.correctorGramatica, name='corrector'),
     path('ayuda/', views.ayuda, name='ayuda'),
-    path('docente/', views.vista_docente, name='docente'),
+    #path('docente/', views.vista_docente, name='docente'),
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.register_estudiante, name='register'),
 ]
