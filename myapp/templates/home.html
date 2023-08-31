@@ -2,11 +2,81 @@
 <html>
 <head>
     <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            border: 2px solid #fff;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #fff;
+        }
+
+        th {
+            background-color: #444;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #222;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            text-decoration: none;
+            background-color: #444;
+            padding: 10px 20px;
+            color: #fff;
+            border: 2px solid #fff;
+            width: 200px;
+        }
+
+        a:hover {
+            background-color: #666;
+        }
+
+        @media screen and (max-width: 768px) {
+            table {
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+    </style>
 </head>
+
+
 <body>
-    <h1>Welcome to the Home Page</h1>
-    
-    <h2>Registered Students:</h2>
+
+    <h2>Tabla de Estudiantes:</h2>
     <table>
         <tr>
             <th>Nombre</th>
@@ -26,6 +96,8 @@
         {% endfor %}
     </table>
     
-    <a href="{% url 'logout' %}">Logout</a>
+    <div style="text-align: center;">
+        <a href="{% url 'logout' %}">Cerrar Sesión</a>
+    </div>
 </body>
 </html>
