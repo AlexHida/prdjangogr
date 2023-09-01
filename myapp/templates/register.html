@@ -11,7 +11,7 @@
     />
   </head>
   <body>
-    {% include 'nav.html' %}
+    {% include 'navLogin.html' %}
     <div class="esp row justify-content-center align-items-center">
       <div class="cardMyStyle ">
         <h1 class="text-center">Registro de Estudiante</h1>
@@ -24,20 +24,45 @@
           <div class="col-md-6">
            
             <form method="post">
-              {% csrf_token %} 
-
-                {% for field in form %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {{ field.errors }}
-                </div>
-                {% endfor %}
-                <div class="row d-grid justify-content-center align-items-center mt-3">
+              {% csrf_token %}
+              <div>
+                  {{ form.nombre.label_tag }} {{ form.nombre }}
+                  {% if form.nombre.errors %}
+                  <span style="color: red">{{ form.nombre.errors|join:", " }}</span>
+                  {% endif %}
+              </div>
+              <div>
+                  {{ form.apellido.label_tag }} {{ form.apellido }}
+                  {% if form.apellido.errors %}
+                  <span style="color: red">{{ form.apellido.errors|join:", " }}</span>
+                  {% endif %}
+              </div>
+              <div>
+                {{ form.correo.label_tag }} {{ form.correo }}
+                {% if form.correo.errors %}
+                <span style="color: red">{{ form.correo.errors|join:", " }}</span>
+                {% endif %}
+              </div>
+              <div>
+                  {{ form.usua.label_tag }} {{ form.usua }}
+                  {% if form.usua.errors %}
+                  <span style="color: red">{{ form.usua.errors|join:", " }}</span>
+                  {% endif %}
+              </div>
+              <div>
+                  {{ form.pass1.label_tag }} {{ form.pass1 }}
+                  {% if form.pass1.errors %}
+                  <span style="color: red">{{ form.pass1.errors|join:", " }}</span>
+                  {% endif %}
+              </div>
+              <div class="row d-grid justify-content-center align-items-center mt-3">
                 <button type="submit" class="btn btn-primary btn-block">
                     Register
-                  </button>
-                </div>
+                </button>
+              </div>
+            </form>
+            <form action="{% url 'login' %}" method="get">
+              <button type="submit">Volver al inicio de sesión</button>
             </form>
           </div>
         </div>

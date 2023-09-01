@@ -4,10 +4,20 @@ from .models import Estudiante
 class EstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
-        exclude = ['asistencia']  # Excluye el campo 'asistencia' del formulario
+        exclude = ['asistencia']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.instance.asistencia = 0  # Establece el valor por defecto de asistencia a 0
+        self.instance.asistencia = 0
 
-        fields = '__all__'  # Todos los campos del modelo
+        self.fields['nombre'].label = 'Nombre:'
+        self.fields['apellido'].label = 'Apellido:'
+        self.fields['correo'].label = 'Gmail'
+        self.fields['usua'].label = 'Usuario'
+        self.fields['pass1'].label = 'Contraseña'
+
+    def clean_usua(self):
+        usua = self.cleaned_data.get('usua')
+        if Estudiante.objects.filter(usua=usua).exists():
+            raise forms.ValidationError('Este usuario ya está registrado.')
+        return usua
