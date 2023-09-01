@@ -10,6 +10,9 @@ class EstudianteForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.asistencia = 0
 
+        self.fields['usua'].initial = ''
+        self.fields['pass1'].initial = ''
+
         self.fields['nombre'].label = 'Nombre:'
         self.fields['apellido'].label = 'Apellido:'
         self.fields['correo'].label = 'Gmail'
