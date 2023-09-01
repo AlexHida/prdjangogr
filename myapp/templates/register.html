@@ -1,14 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+  <head>
     <title>Register Estudiante</title>
-</head>
-<body>
-    <h1>Register Estudiante</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-</body>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    {% include 'nav.html' %}
+    <div class="esp row justify-content-center align-items-center">
+      <div class="cardMyStyle ">
+        <h1 class="text-center">Registro de Estudiante</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="d-flex justify-content-center align-items-center">
+                <img src="{% static 'images/LogoGramatica.png' %}" alt="Icono de corrección" class="imgStylelogin">
+              </div>
+          </div>
+          <div class="col-md-6">
+           
+            <form method="post">
+              {% csrf_token %} 
+
+                {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+                {% endfor %}
+                <div class="row d-grid justify-content-center align-items-center mt-3">
+                <button type="submit" class="btn btn-primary btn-block">
+                    Register
+                  </button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

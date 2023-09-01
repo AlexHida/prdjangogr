@@ -3,101 +3,39 @@
 <head>
     <title>Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            background-color: #111;
-            color: #fff;
-            font-family: Arial, sans-serif;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 36px;
-            margin-top: 20px;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            font-size: 24px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            border: 2px solid #fff;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #fff;
-        }
-
-        th {
-            background-color: #444;
-        }
-
-        tr:nth-child(even) {
-            background-color: #333;
-        }
-
-        tr:nth-child(odd) {
-            background-color: #222;
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin: 20px auto;
-            text-decoration: none;
-            background-color: #444;
-            padding: 10px 20px;
-            color: #fff;
-            border: 2px solid #fff;
-            width: 200px;
-        }
-
-        a:hover {
-            background-color: #666;
-        }
-
-        @media screen and (max-width: 768px) {
-            table {
-                width: 100%;
-                overflow-x: auto;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
-
 <body>
-
-    <h2>Tabla de Estudiantes:</h2>
-    <table>
-        <tr>
+    {% include 'nav.html' %}
+    <div class="Mycontainer-div-table">
+    <h2 class="text-center">Tabla de Estudiantes</h2>
+    <div class="container">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr class="text-center">
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Correo</th>
             <th>Usuario</th>
             <th>Asistencia</th>
         </tr>
+    </thead>
+    <tbody>
         {% for estudiante in estudiantes %}
             <tr>
                 <td>{{ estudiante.nombre }}</td>
                 <td>{{ estudiante.apellido }}</td>
                 <td>{{ estudiante.correo }}</td>
-                <td>{{ estudiante.usua }}</td>
-                <td>{{ estudiante.asistencia }}</td>
+                <td class="text-center">{{ estudiante.usua }}</td>
+                <td class="text-center">{{ estudiante.asistencia }}</td>
             </tr>
         {% endfor %}
+    </tbody>
     </table>
-    
-    <div style="text-align: center;">
-        <a href="{% url 'logout' %}">Cerrar Sesión</a>
+    <div class="row d-grid justify-content-center align-items-center mt-3">
+    <a class="btn btn-success" href="{% url 'register' %}">Registrar Estudiante</a>
+</div>
     </div>
 </body>
 </html>

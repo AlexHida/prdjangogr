@@ -25,6 +25,7 @@ urlpatterns = [
     path('videos/', views.videos_index, name='videos_index'),
     path('corrector/', views.correctorGramatica, name='corrector'),
     path('ayuda/', views.ayuda, name='ayuda'),
+    path('navLogin/', views.ayuda, name='navLogin'),
     #path('docente/', views.vista_docente, name='docente'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_estudiante, name='register'),
