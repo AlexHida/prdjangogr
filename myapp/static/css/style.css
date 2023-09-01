@@ -112,3 +112,27 @@
     overflow-x: auto;
     margin-top: 75px;
   }
+
+  .error-alert {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+.form-Mycontrol::placeholder {
+    color: #888; 
+}
+
+.form-Mycontrol.error::placeholder {
+    color: red;
+}
+
+
+
+
+

@@ -10,6 +10,7 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
   </head>
+  
   <body>
     {% include 'navLogin.html' %}
     <div class="esp row justify-content-center align-items-center">
@@ -22,51 +23,74 @@
               </div>
           </div>
           <div class="col-md-6">
-           
+            <div id="error-alert" class="error-alert"></div>
             <form method="post">
               {% csrf_token %}
-              <div>
-                  {{ form.nombre.label_tag }} {{ form.nombre }}
-                  {% if form.nombre.errors %}
-                  <span style="color: red">{{ form.nombre.errors|join:", " }}</span>
-                  {% endif %}
-              </div>
-              <div>
-                  {{ form.apellido.label_tag }} {{ form.apellido }}
-                  {% if form.apellido.errors %}
-                  <span style="color: red">{{ form.apellido.errors|join:", " }}</span>
-                  {% endif %}
-              </div>
-              <div>
-                {{ form.correo.label_tag }} {{ form.correo }}
-                {% if form.correo.errors %}
-                <span style="color: red">{{ form.correo.errors|join:", " }}</span>
-                {% endif %}
-              </div>
-              <div>
-                  {{ form.usua.label_tag }} {{ form.usua }}
-                  {% if form.usua.errors %}
-                  <span style="color: red">{{ form.usua.errors|join:", " }}</span>
-                  {% endif %}
-              </div>
-              <div>
-                  {{ form.pass1.label_tag }} {{ form.pass1 }}
-                  {% if form.pass1.errors %}
-                  <span style="color: red">{{ form.pass1.errors|join:", " }}</span>
-                  {% endif %}
-              </div>
+              <div class="col-md-12">
+                <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+                <input type="text" name="{{ form.nombre.name }}" id="{{ form.nombre.id_for_label }}" 
+                class="form-Mycontrol {% if form.nombre.errors %}error{% endif %}" placeholder="Ingrese el nombre">
+            </div>
+            <div class="col-md-12">
+                <label for="{{ form.apellido.id_for_label }}">Apellido:</label>
+                <input type="text" name="{{ form.apellido.name }}" id="{{ form.apellido.id_for_label }}" 
+                class="form-Mycontrol {% if form.apellido.errors %}error{% endif %}" placeholder="Ingrese el apellido">
+            </div>
+            <div class="col-md-12">
+                <label for="{{ form.correo.id_for_label }}">Correo:</label>
+                <input type="email" name="{{ form.correo.name }}" id="{{ form.correo.id_for_label }}" 
+                class="form-Mycontrol {% if form.correo.errors %}error{% endif %}" placeholder="Ingrese el correo">
+            </div>
+            <div class="col-md-12">
+                <label for="{{ form.usua.id_for_label }}">Usuario:</label>
+                <input type="text" name="{{ form.usua.name }}" id="{{ form.usua.id_for_label }}" 
+                class="form-Mycontrol {% if form.usua.errors %}error{% endif %}" placeholder="Ingrese el usuario">
+            </div>
+            <div class="col-md-12">
+                <label for="{{ form.pass1.id_for_label }}">Contraseña:</label>
+                <input type="password" name="{{ form.pass1.name }}" id="{{ form.pass1.id_for_label }}" 
+                class="form-Mycontrol {% if form.pass1.errors %}error{% endif %}" placeholder="Ingrese la contraseña">
+  
+            </div>
               <div class="row d-grid justify-content-center align-items-center mt-3">
                 <button type="submit" class="btn btn-primary btn-block">
-                    Register
+                    Registrar
                 </button>
               </div>
             </form>
-            <form action="{% url 'login' %}" method="get">
-              <button type="submit">Volver al inicio de sesión</button>
-            </form>
+            <div class="row d-grid justify-content-center align-items-center">
+              <a class="colortextNav" href="{% url 'login' %}">Volver al inicio de sesión</a>
+          </div>
+
           </div>
         </div>
       </div>
     </div>
   </body>
+
+  {% if form.usua.errors %}
+  <script>
+        var errorAlert = document.getElementById('error-alert');
+        errorAlert.innerHTML = '{{ form.usua.errors|join:", " }}';
+        errorAlert.style.display = 'block';
+        setTimeout(function() {
+          errorAlert.style.display = 'none';
+      }, 3500); 
+    
+</script>
+{% endif %}
+
+{% if form.correo.errors %}
+<script>
+      var errorAlert = document.getElementById('error-alert');
+      errorAlert.innerHTML = '{{ form.correo.errors|join:", " }}';
+      errorAlert.style.display = 'block';
+      setTimeout(function() {
+        errorAlert.style.display = 'none';
+    }, 3500); 
+  
+</script>
+{% endif %}
+
+
 </html>

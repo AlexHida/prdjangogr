@@ -13,14 +13,19 @@ class EstudianteForm(forms.ModelForm):
         self.fields['usua'].initial = ''
         self.fields['pass1'].initial = ''
 
-        self.fields['nombre'].label = 'Nombre:'
-        self.fields['apellido'].label = 'Apellido:'
-        self.fields['correo'].label = 'Gmail'
-        self.fields['usua'].label = 'Usuario'
-        self.fields['pass1'].label = 'Contraseña'
+        self.fields['nombre'].label = ''
+        self.fields['apellido'].label = ''
+        self.fields['correo'].label = ''
+        self.fields['usua'].label = ''
+        self.fields['pass1'].label = ''
 
     def clean_usua(self):
         usua = self.cleaned_data.get('usua')
         if Estudiante.objects.filter(usua=usua).exists():
-            raise forms.ValidationError('Este usuario ya está registrado.')
-        return usua
+            raise forms.ValidationError('Este usuario ya está registrado')
+
+    
+    def clean_correo(self):
+        email = self.cleaned_data.get('correo')
+        if Estudiante.objects.filter(correo=email).exists():
+            raise forms.ValidationError('Este correo ya está registrado')
