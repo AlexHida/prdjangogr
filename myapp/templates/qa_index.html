@@ -1,11 +1,17 @@
-{% extends "base.html" %}
-
 {% block title %}
     Preguntas y Respuestas
 {% endblock %}
-
 {% load static %}
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas y Respuestas</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/styl.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
 {% block content %}
     {% include 'nav.html' %}
 
@@ -33,6 +39,7 @@
                             <input type="text" class="form-control" name="pregunta" id="pregunta" value="{{ request.POST.pregunta }}" style="font-size: 14px;" />
                         </div>
                         <button type="submit" class="btn btn-primary" id="pregunta-button" style="font-size: 14px;">Responder</button>
+                        <div id="loading-indicator" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(255, 255, 255, 0.7); padding: 10px; border-radius: 5px; font-size: 16px;">Cargando...</div>
                     </form>
                 </div>
                 <div class="col-md-6 justify-content-center">
@@ -60,14 +67,52 @@
         document.getElementById('pregunta-form').addEventListener('submit', function() {
             showLoadingIndicator('pregunta-button');
         });
-
+    
         if (typeof tieneRespuesta !== 'undefined' && tieneRespuesta) {
             hideLoadingIndicator('pregunta-button');
         }
-
+    
+        function showLoadingIndicator(buttonId) {
+            // Crear un div para la superposición de carga
+            var loadingOverlay = document.createElement('div');
+            loadingOverlay.style.position = 'fixed';
+            loadingOverlay.style.top = '0';
+            loadingOverlay.style.left = '0';
+            loadingOverlay.style.width = '100%';
+            loadingOverlay.style.height = '100%';
+            loadingOverlay.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+            loadingOverlay.style.display = 'flex';
+            loadingOverlay.style.alignItems = 'center';
+            loadingOverlay.style.justifyContent = 'center';
+    
+            // Crear el mensaje de carga
+            var loadingMessage = document.createElement('p');
+            loadingMessage.innerText = 'Cargando...';
+            loadingMessage.style.fontSize = '24px';
+    
+            // Agregar el mensaje de carga a la superposición
+            loadingOverlay.appendChild(loadingMessage);
+    
+            // Agregar la superposición al cuerpo del documento
+            document.body.appendChild(loadingOverlay);
+    
+            // Deshabilitar el botón de envío mientras se carga
+            document.getElementById(buttonId).disabled = true;
+        }
+    
         function hideLoadingIndicator(buttonId) {
-            document.getElementById('loading-indicator').style.display = 'none';
+            // Eliminar la superposición de carga
+            var loadingOverlay = document.querySelector('div[style*="rgba(255, 255, 255, 0.7)"]');
+            if (loadingOverlay) {
+                loadingOverlay.parentNode.removeChild(loadingOverlay);
+            }
+    
+            // Habilitar el botón de envío
             document.getElementById(buttonId).disabled = false;
         }
     </script>
+    
 {% endblock %}
+</body>
+</html>
+
