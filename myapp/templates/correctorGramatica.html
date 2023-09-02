@@ -1,81 +1,126 @@
-{% extends "base.html" %}
 
 {% block title %}
     Corrección Gramatical
 {% endblock %}
-
 {% load static %}
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrección Gramatical</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/styl.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
 {% block content %}
-    {% include 'nav.html' %}
+{% include 'nav.html' %}
 
-    <div class="container esp">
-        <div class="divTitle">
-            <h1>Corrección de Gramática</h1>
-        </div>
-        <div class="alert alert-info mt-4" style="font-size: 14px;">
-            <p>Bienvenido al módulo de corrección gramatical. Aquí puedes ingresar un texto en inglés
-                que deseas corregir. Solo tienes que escribir o pegar el texto en el campo proporcionado
-                y luego presionar el botón "Corregir" para obtener la respuesta.</p>
-            
-        </div>
-        <div class="bg-light p-3 mt-1 rounded-bottom myBorder">
-            <div class="row">
-                <div class="col-md-6">
-                    <form method="post" class="mb-4" id="corregir-form">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="texto">Texto en inglés:</label>
-                            <textarea
-                                class="form-control"
-                                name="texto"
-                                id="texto"
-                                cols="50"
-                                rows="5"
-                                maxlength="130"
-                            >{{ request.POST.texto }}</textarea>
-                            <small class="form-text text-muted">Máximo 130 caracteres.</small>
+<div class="container esp">
+    <div class="divTitle">
+        <h1>Corrección de Gramática</h1>
+    </div>
+    <div class="alert alert-info mt-4" style="font-size: 14px;">
+        <p>Bienvenido al módulo de corrección gramatical. Aquí puedes ingresar un texto en inglés
+            que deseas corregir. Solo tienes que escribir o pegar el texto en el campo proporcionado
+            y luego presionar el botón "Corregir" para obtener la respuesta.</p>
+        
+    </div>
+    <div class="bg-light p-3 mt-1 rounded-bottom myBorder">
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post" class="mb-4" id="corregir-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="texto">Texto en inglés:</label>
+                        <textarea
+                            class="form-control"
+                            name="texto"
+                            id="texto"
+                            cols="50"
+                            rows="5"
+                            maxlength="130"
+                        >{{ request.POST.texto }}</textarea>
+                        <small class="form-text text-muted">Máximo 130 caracteres.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="corregir-button">Corregir</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                {% if resultado %}
+                    <div class="mt-4">
+                        <div class="bg-danger rounded text-white p-3">
+                            <h2>Texto original:</h2>
+                            <p>{{ texto_original }}</p>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="corregir-button">Corregir</button>
-                    </form>
-                </div>
-                <div class="col-md-6">
-                    {% if resultado %}
-                        <div class="mt-4">
-                            <div class="bg-danger rounded text-white p-3">
-                                <h2>Texto original:</h2>
-                                <p>{{ texto_original }}</p>
-                            </div>
-                            <div class="bg-success rounded text-white p-3 mt-3">
-                                <h2>Texto corregido:</h2>
-                                <p>{{ resultado }}</p>
-                            </div>
-                            <script>
-                                var tieneResultado = true;
-                            </script>
+                        <div class="bg-success rounded text-white p-3 mt-3">
+                            <h2>Texto corregido:</h2>
+                            <p>{{ resultado }}</p>
                         </div>
-                    {% else %}
                         <script>
-                            var tieneResultado = false;
+                            var tieneResultado = true;
                         </script>
-                    {% endif %}
-                </div>
+                    </div>
+                {% else %}
+                    <script>
+                        var tieneResultado = false;
+                    </script>
+                {% endif %}
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        document.getElementById('corregir-form').addEventListener('submit', function() {
-            showLoadingIndicator('corregir-button');
-        });
+<script>
+    document.getElementById('corregir-form').addEventListener('submit', function() {
+        showLoadingIndicator('corregir-button');
+    });
 
-        if (typeof tieneResultado !== 'undefined' && tieneResultado) {
-            hideLoadingIndicator('corregir-button');
+    if (typeof tieneResultado !== 'undefined' && tieneResultado) {
+        hideLoadingIndicator('corregir-button');
+    }
+
+    function showLoadingIndicator(buttonId) {
+        // Crear un div para la superposición de carga
+        var loadingOverlay = document.createElement('div');
+        loadingOverlay.style.position = 'fixed';
+        loadingOverlay.style.top = '0';
+        loadingOverlay.style.left = '0';
+        loadingOverlay.style.width = '100%';
+        loadingOverlay.style.height = '100%';
+        loadingOverlay.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+        loadingOverlay.style.display = 'flex';
+        loadingOverlay.style.alignItems = 'center';
+        loadingOverlay.style.justifyContent = 'center';
+
+        // Crear el mensaje de carga
+        var loadingMessage = document.createElement('p');
+        loadingMessage.innerText = 'Cargando...';
+        loadingMessage.style.fontSize = '24px';
+
+        // Agregar el mensaje de carga a la superposición
+        loadingOverlay.appendChild(loadingMessage);
+
+        // Agregar la superposición al cuerpo del documento
+        document.body.appendChild(loadingOverlay);
+
+        // Deshabilitar el botón de envío mientras se carga
+        document.getElementById(buttonId).disabled = true;
+    }
+
+    function hideLoadingIndicator(buttonId) {
+        // Eliminar la superposición de carga
+        var loadingOverlay = document.querySelector('div[style*="rgba(255, 255, 255, 0.7)"]');
+        if (loadingOverlay) {
+            loadingOverlay.parentNode.removeChild(loadingOverlay);
         }
 
-        function hideLoadingIndicator(buttonId) {
-            document.getElementById('loading-indicator').style.display = 'none';
-            document.getElementById(buttonId).disabled = false;
-        }
-    </script>
+        // Habilitar el botón de envío
+        document.getElementById(buttonId).disabled = false;
+    }
+</script>
+
 {% endblock %}
+</body>
+</html>
+
