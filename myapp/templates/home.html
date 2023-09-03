@@ -18,7 +18,8 @@
             <th>Apellido</th>
             <th>Correo</th>
             <th>Usuario</th>
-            <th>Asistencia</th>
+            <th>Tarea Gramática</th>
+            <th>Tarea Preguntas</th>
         </tr>
     </thead>
     <tbody>
@@ -28,7 +29,8 @@
                 <td>{{ estudiante.apellido }}</td>
                 <td>{{ estudiante.correo }}</td>
                 <td class="text-center">{{ estudiante.usua }}</td>
-                <td class="text-center">{{ estudiante.asistencia }}</td>
+                <td class="text-center">{{ estudiante.TaGramar }}</td>
+                <td class="text-center">{{ estudiante.TaPreguntas }}</td>
             </tr>
         {% endfor %}
     </tbody>

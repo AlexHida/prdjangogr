@@ -132,7 +132,10 @@
     color: red;
 }
 
-
+.user-name {
+    color: #FF0000; /* Cambia este valor al color que desees */
+    font-weight: bold; /* Otras propiedades de estilo que desees aplicar */
+}
 
 
 

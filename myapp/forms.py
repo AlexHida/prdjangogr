@@ -4,11 +4,12 @@ from .models import Estudiante
 class EstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
-        exclude = ['asistencia']
+        exclude = ['TaGramar', 'TaPreguntas']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.instance.asistencia = 0
+        self.instance.TaGramar = 0
+        self.instance.TaPreguntas = 0
 
         self.fields['usua'].initial = ''
         self.fields['pass1'].initial = ''

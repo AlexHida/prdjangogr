@@ -30,6 +30,8 @@
                 <div class="col-md-6">
                     <form method="post" id="pregunta-form">
                         {% csrf_token %}
+                        <!-- Agrega el campo usua como input oculto -->
+                        <input type="hidden" name="usua" value="{{ estudiante.usua }}">
                         <div class="form-group">
                             <label for="contexto" style="font-size: 14px;">Contexto:</label>
                             <textarea class="form-control" name="contexto" id="contexto" cols="50" rows="3" style="font-size: 14px;">{{ request.POST.contexto }}</textarea>

@@ -5,6 +5,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, Group
 from .forms import EstudianteForm
 from .models import Estudiante
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib import messages
 import requests
 
 #Correción Gramatical
@@ -18,17 +21,50 @@ YOUTUBE_API_KEY = "AIzaSyD7vY_shdAc7UCBzfalnzFQlQ904XrVP0w"
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
+def incrementar_preg(request, usua):
+    estudiante = Estudiante.objects.get(usua=usua)
+    estudiante.TaPreguntas += 1
+    estudiante.save()
+    return HttpResponseRedirect(reverse('qa_index'))
+
+def incrementar_gramar(request, usua):
+    estudiante = Estudiante.objects.get(usua=usua)
+    estudiante.TaGramar += 1
+    estudiante.save()
+    return HttpResponseRedirect(reverse('corrector'))
+
+def addsupU(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        password_confirm = request.POST['password_confirm']
+
+        # Verifica si el usuario ya existe
+        if User.objects.filter(username=username).exists():
+            # Agrega un mensaje de error
+            messages.error(request, 'El usuario ya existe. Por favor, elige otro nombre de usuario.')
+        elif password != password_confirm:
+            # Agrega un mensaje de error si las contraseñas no coinciden
+            messages.error(request, 'Las contraseñas no coinciden. Por favor, inténtalo de nuevo.')
+        else:
+            # Cuando el usuario no existe y las contraseñas coinciden, crea el superusuario
+            User.objects.create_superuser(username=username, password=password)
+            return redirect('index')  # Redirige a la página de inicio de sesión o a donde desees
+
+    return render(request, 'addsupuser.html')
+
 def index(request):
+    # Verifica si el usuario está autenticado
     if request.user.is_authenticated:
         user = request.user
         if user.groups.filter(name='Estudiantes').exists():
+            # Obtiene el estudiante actualmente autenticado
             estudiante = Estudiante.objects.get(usua=user.username)
-            estudiante.asistencia += 1
-            estudiante.save()
-
-            # Redirige a la plantilla 'index.html' si el usuario es estudiante
+            
+            # Renderiza la plantilla 'index.html' solo con el estudiante autenticado
             return render(request, 'index.html', {'estudiante': estudiante})
 
+    # Si el usuario no está autenticado o no es un estudiante, muestra la lista completa
     estudiantes = Estudiante.objects.all()
     return render(request, 'home.html', {'estudiantes': estudiantes})
 
@@ -82,15 +118,30 @@ def correctorGramatica(request):
     resultado = None
     texto_original = None
     respuestaRecibida = False  # Inicializar la variable
-    if request.method == 'POST':
-        input_text = request.POST.get('texto', '')
-        texto_original = input_text
-        output = corregir_gramatica(input_text)
-        if isinstance(output, list) and len(output) > 0:
-            resultado = output[0].get('generated_text', '')
-            respuestaRecibida = bool(resultado)  # Actualizar la variable
+    estudiante = None
 
-    return render(request, 'correctorGramatica.html', {'resultado': resultado, 'texto_original': texto_original, 'respuestaRecibida': respuestaRecibida})
+    if request.user.is_authenticated:
+        user = request.user
+        if user.groups.filter(name='Estudiantes').exists():
+            estudiante = Estudiante.objects.get(usua=user.username)
+
+    if request.method == 'POST':
+        # Verifica si el formulario se envió correctamente
+        if 'texto' in request.POST:
+            input_text = request.POST.get('texto', '')
+            texto_original = input_text
+            output = corregir_gramatica(input_text)
+            if isinstance(output, list) and len(output) > 0:
+                resultado = output[0].get('generated_text', '')
+                respuestaRecibida = bool(resultado)  # Actualizar la variable
+
+                # Si hay un estudiante autenticado, incrementa TaGramar
+                if estudiante:
+                    estudiante.TaGramar += 1
+                    estudiante.save()
+
+    return render(request, 'correctorGramatica.html', {'resultado': resultado, 'texto_original': texto_original, 'respuestaRecibida': respuestaRecibida, 'estudiante': estudiante})
+
 
 
 def corregir_gramatica(input_text):
@@ -135,10 +186,23 @@ def get_youtube_videos(channel_id, max_results=10):
     return videos
 
 
+
 def qa_index(request):
     respuesta = None
+    estudiante = None
+    
+    if request.user.is_authenticated:
+        user = request.user
+        if user.groups.filter(name='Estudiantes').exists():
+            estudiante = Estudiante.objects.get(usua=user.username)
+    
     if request.method == 'POST':
         contexto = request.POST.get('contexto', '')
         pregunta = request.POST.get('pregunta', '')
         respuesta = hacer_pregunta(contexto, pregunta)
-    return render(request, 'qa_index.html', {'respuesta': respuesta})
+        
+        # Si hay un estudiante autenticado, incrementa TaGramar
+        if estudiante:
+            incrementar_preg(request, estudiante.usua)
+            
+    return render(request, 'qa_index.html', {'respuesta': respuesta, 'estudiante': estudiante})

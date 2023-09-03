@@ -31,6 +31,8 @@
             <div class="col-md-6">
                 <form method="post" class="mb-4" id="corregir-form">
                     {% csrf_token %}
+                    <!-- Agrega el campo usua como input oculto -->
+                    <input type="hidden" name="usua" value="{{ estudiante.usua }}">
                     <div class="form-group">
                         <label for="texto">Texto en inglés:</label>
                         <textarea

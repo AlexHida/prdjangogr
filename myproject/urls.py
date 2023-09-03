@@ -29,4 +29,6 @@ urlpatterns = [
     #path('docente/', views.vista_docente, name='docente'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_estudiante, name='register'),
+    path('incrementar_gramar/<str:usua>/', views.incrementar_preg, name='incrementar_gramar'),
+    path('addsupuser/', views.addsupU, name='addsupuser'),
 ]
