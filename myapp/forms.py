@@ -16,7 +16,7 @@ class EstudianteForm(forms.ModelForm):
 
         self.fields['nombre'].label = 'Nombre:'
         self.fields['apellido'].label = 'Apellido:'
-        self.fields['correo'].label = 'Gmail'
+        self.fields['correo'].label = 'Correo'
         self.fields['usua'].label = 'Usuario'
         self.fields['pass1'].label = 'Contraseña'
 
