@@ -1,5 +1,5 @@
 {% block title %}
-    Agregar Superusuario
+
 {% endblock %}
 {% load static %}
 
@@ -8,27 +8,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Superusuario</title>
+    <title>Agregar Docente</title>
     <link rel="stylesheet" type="text/css" href="/static/css/styl.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 {% block content %}
-    {% include 'nav.html' %}
+    {% include 'navLogin.html' %}
 
     <div class="container esp">
         <div class="divTitle">
-            <h1>Agregar Superusuario</h1>
+            <h1>Agregar Docente</h1>
         </div>
         <div class="bg-light p-3 mt-4 rounded-bottom myBorder">
             {% if messages %}
-                <div class="alert alert-danger">
-                    <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                <ul class="messages">
+                    {% for message in messages %}
+                        <h7{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: red;">{{ message }}</h7>
+                    {% endfor %}
+                </ul>
             {% endif %}
             <form method="post" class="mb-4" id="addsupuser-form">
                 {% csrf_token %}
@@ -44,8 +42,15 @@
                     <label for="password_confirm">Confirmar contraseña:</label>
                     <input type="password" class="form-control" name="password_confirm" id="password_confirm" required>
                 </div>
-                <button type="submit" class="btn btn-primary" id="addsupuser-button">Agregar Superusuario</button>
+                <button type="submit" class="btn btn-primary" id="addsupuser-button">Agregar Docente</button>
             </form>
+            <div class="row d-grid justify-content-center align-items-center mt-2">
+                <a class="text-success" href="{% url 'login' %}">Volver al inicio de sesión</a>
+            </div>
+            <div class="row d-grid justify-content-center align-items-center">
+            <div class="alert alert-primary mt-2" role="alert">
+                ¿Quieres registrarte como Estudiante? Da clic aquí <a class="text-success" href="{% url 'register' %}">Estudiante</a>.
+            </div>
         </div>
     </div>
 {% endblock %}

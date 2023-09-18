@@ -3,7 +3,7 @@
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   <head>
-    <title>Register Estudiante</title>
+    <title>Registro de Estudiante</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
@@ -14,87 +14,86 @@
   <body>
     {% include 'navLogin.html' %}
     <div class="esp row justify-content-center align-items-center">
-      <div class="cardMyStyle ">
+      <div class="cardMyStyle">
         <h1 class="text-center">Registro de Estudiante</h1>
+        {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <h7{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: red;">{{ message }}</h7>
+                    {% endfor %}
+                </ul>
+        {% endif %}
+        <form method="post">
         <div class="row">
           <div class="col-md-6">
-            <div class="d-flex justify-content-center align-items-center">
-                <img src="{% static 'images/LogoGramatica.png' %}" alt="Icono de corrección" class="imgStylelogin">
+            {% csrf_token %}
+              <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" name="nombre" id="nombre" required>
+              </div>
+              <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" class="form-control" name="apellido" id="apellido" required>
+              </div>
+              <div class="form-group">
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" class="form-control" name="correo" id="correo" required>
               </div>
           </div>
           <div class="col-md-6">
-            <div id="error-alert" class="error-alert"></div>
-            <form method="post">
-              {% csrf_token %}
-              <div>
-                {{ form.nombre.label_tag }} {{ form.nombre }}
-                {% if form.nombre.errors %}
-                <span style="color: red">{{ form.nombre.errors|join:", " }}</span>
-                {% endif %}
-            </div>
-            <div>
-                {{ form.apellido.label_tag }} {{ form.apellido }}
-                {% if form.apellido.errors %}
-                <span style="color: red">{{ form.apellido.errors|join:", " }}</span>
-                {% endif %}
-            </div>
-            <div>
-                {{ form.correo.label_tag }} {{ form.correo }}
-                {% if form.correo.errors %}
-                <span style="color: red">{{ form.correo.errors|join:", " }}</span>
-                {% endif %}
-            </div>
-            <div>
-                {{ form.usua.label_tag }} {{ form.usua }}
-                {% if form.usua.errors %}
-                <span style="color: red">{{ form.usua.errors|join:", " }}</span>
-                {% endif %}
-            </div>
-            <div>
-                {{ form.pass1.label_tag }} {{ form.pass1 }}
-                {% if form.pass1.errors %}
-                <span style="color: red">{{ form.pass1.errors|join:", " }}</span>
-                {% endif %}
-            </div>
-              <div class="row d-grid justify-content-center align-items-center mt-3">
-                <button type="submit" class="btn btn-primary btn-block">
-                    Registrar
-                </button>
+              <div class="form-group">
+                <label for="usua">Nombre de usuario:</label>
+                <input type="text" class="form-control" name="usua" id="usua" required>
+                <div class="error-alert" style="color: rgb(12, 9, 9);">
+                  {% if form.usua.errors %}
+                    {{ form.usua.errors|join:", " }}
+                  {% endif %}
+                </div>
               </div>
-            </form>
-            <div class="row d-grid justify-content-center align-items-center">
-              <a class="colortextNav" href="{% url 'login' %}">Volver al inicio de sesión</a>
-          </div>
-
+              <div class="form-group">
+                <label for="pass1">Contraseña:</label>
+                <input type="password" class="form-control" name="pass1" id="pass1" required>
+                <div class="error-alert" style="color: red;">
+                  {% if form.pass1.errors %}
+                    {{ form.pass1.errors|join:", " }}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="password_confirm">Confirmar contraseña:</label>
+                <input type="password" class="form-control" name="password_confirm" id="password_confirm" required>
+              </div>
           </div>
         </div>
+        <div class="row d-grid justify-content-center align-items-center mt-2">
+          <button type="submit" class="btn btn-primary btn-block">
+              Registrar
+          </button>
+        </div>
+      </form>
+      <div class="row d-grid justify-content-center align-items-center mt-2">
+        <a class="text-success" href="{% url 'login' %}">Volver al inicio de sesión</a>
+      </div>
+      <div class="row d-grid justify-content-center align-items-center">
+        <div class="alert alert-primary mt-2" role="alert">
+            ¿Quieres registrarte como Docente? Da clic aquí <a class="text-success" href="{% url 'addsupuser' %}">Docente</a>.
       </div>
     </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const errorAlerts = document.querySelectorAll('.error-alert');
+        errorAlerts.forEach(function (alert) {
+          if (alert.innerHTML.trim() !== '') {
+            alert.style.display = 'block';
+            setTimeout(function() {
+              alert.style.display = 'none';
+            }, 3500);
+          }
+        });
+      });
+    </script>
   </body>
-
-  {% if form.usua.errors %}
-  <script>
-        var errorAlert = document.getElementById('error-alert');
-        errorAlert.innerHTML = '{{ form.usua.errors|join:", " }}';
-        errorAlert.style.display = 'block';
-        setTimeout(function() {
-          errorAlert.style.display = 'none';
-      }, 3500); 
-    
-</script>
-{% endif %}
-
-{% if form.correo.errors %}
-<script>
-      var errorAlert = document.getElementById('error-alert');
-      errorAlert.innerHTML = '{{ form.correo.errors|join:", " }}';
-      errorAlert.style.display = 'block';
-      setTimeout(function() {
-        errorAlert.style.display = 'none';
-    }, 3500); 
-  
-</script>
-{% endif %}
-
-
 </html>

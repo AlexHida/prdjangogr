@@ -1,52 +1,108 @@
-<!DOCTYPE html>
-<html>
-<head>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styl.css' %}">
+{% block title %}
 
-    <title>{% block title %}{% endblock %}</title>
-    <!-- Agrega el enlace a Bootstrap aquí -->
+{% endblock %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Docente</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/styl.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
+{% block content %}
+    {% include 'navLogin.html' %}
 
-    <div id="loading-indicator" class="text-center" style="display: none;">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Cargando...</span>
+    <div class="container esp">
+        <div class="divTitle">
+            <h1>Agregar Estudiante</h1>
         </div>
-        <p>Cargando modelo...</p>
+        <div class="bg-light p-3 mt-6 rounded-bottom myBorder">
+            {% if messages %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <form method="post" class="mb-4" id="addsupuser-form">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="form-control" name="nombre" id="nombre" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="apellido">Apellido:</label>
+                            <input type="text" class="form-control" name="apellido" id="apellido" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="correo">Correo Electrónico:</label>
+                            <input type="email" class="form-control" name="correo" id="correo" required>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="usua">Nombre de usuario:</label>
+                            <input type="text" class="form-control" name="usua" id="usua" required>
+                            <div class="error-alert" style="color: rgb(12, 9, 9);">
+                              {% if form.usua.errors %}
+                                {{ form.usua.errors|join:", " }}
+                              {% endif %}
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="pass1">Contraseña:</label>
+                            <input type="password" class="form-control" name="pass1" id="pass1" required>
+                            <div class="error-alert" style="color: red;">
+                              {% if form.pass1.errors %}
+                                {{ form.pass1.errors|join:", " }}
+                              {% endif %}
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="password_confirm">Confirmar contraseña:</label>
+                            <input type="password" class="form-control" name="password_confirm" id="password_confirm" required>
+                          </div>
+                    </div>
+                </div>
+                <div class="row d-grid justify-content-center align-items-center mt-3">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Registrar
+                    </button>
+                </div>
+            </form>
+            <div class="row d-grid justify-content-center align-items-center">
+                <a class="colortextNav" href="{% url 'login' %}">Volver al inicio de sesión</a>
+            </div>
+            <div class="row d-grid justify-content-center align-items-center">
+                <div class="alert alert-primary mt-3" role="alert">
+                    ¿Quieres registrarte como Docente? Da clic aquí para <a class="text-success" href="{% url 'addsupuser' %}">Docente</a>.
+                </div>
+            </div>
+        </div>
     </div>
-
     <script>
-        var respuestaRecibida = false;  // Agrega esta variable al principio del script
-    
-        function showLoadingIndicator(buttonId) {
-            document.getElementById('loading-indicator').style.display = 'block';
-            document.getElementById(buttonId).disabled = true;
-        }
-    
-        function hideLoadingIndicator(buttonId) {
-            document.getElementById('loading-indicator').style.display = 'none';
-            document.getElementById(buttonId).disabled = false;
-        }
-    
-        document.getElementById('corregir-form').addEventListener('submit', function() {
-            respuestaRecibida = false;  // Reinicia la variable antes de enviar el formulario
-            showLoadingIndicator('corregir-button');
+        document.addEventListener('DOMContentLoaded', function () {
+          const errorAlerts = document.querySelectorAll('.error-alert');
+          errorAlerts.forEach(function (alert) {
+            if (alert.innerHTML.trim() !== '') {
+              alert.style.display = 'block';
+              setTimeout(function() {
+                alert.style.display = 'none';
+              }, 3500);
+            }
+          });
         });
-    
-        document.getElementById('pregunta-form').addEventListener('submit', function() {
-            respuestaRecibida = false;  // Reinicia la variable antes de enviar el formulario
-            showLoadingIndicator('pregunta-button');
-        });
-    
-        // Para ocultar el indicador de carga y habilitar el botón después de recibir la respuesta
-        // en las vistas de Django, puedes agregar un código similar al final de las respuestas.
-    </script>
-    
+      </script>
+{% endblock %}
 </body>
 </html>
+

@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, Group
 from .forms import EstudianteForm
@@ -20,18 +20,6 @@ QA_HEADERS = {"Authorization": f"Bearer {API_TOKEN}"}
 YOUTUBE_API_KEY = "AIzaSyD7vY_shdAc7UCBzfalnzFQlQ904XrVP0w"
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
-
-def incrementar_preg(request, usua):
-    estudiante = Estudiante.objects.get(usua=usua)
-    estudiante.TaPreguntas += 1
-    estudiante.save()
-    return HttpResponseRedirect(reverse('qa_index'))
-
-def incrementar_gramar(request, usua):
-    estudiante = Estudiante.objects.get(usua=usua)
-    estudiante.TaGramar += 1
-    estudiante.save()
-    return HttpResponseRedirect(reverse('corrector'))
 
 def addsupU(request):
     if request.method == 'POST':
@@ -75,27 +63,40 @@ def register_estudiante(request):
     if request.method == 'POST':
         form = EstudianteForm(request.POST)
         if form.is_valid():
-            estudiante = form.save()  # Guarda el estudiante en la base de datos
-            user = User.objects.create_user(username=estudiante.usua, password=estudiante.pass1)
-            estudiante.user = user
-            estudiante.save()
+            password = request.POST['pass1']
+            password_confirm = request.POST['password_confirm']
 
-            # Asigna al estudiante al grupo "Estudiantes" (si no existe, créalo en el panel de administración)
-            group, created = Group.objects.get_or_create(name='Estudiantes')
-            user.groups.add(group)
+            if password == password_confirm:
+                estudiante = form.save()
+                user = User.objects.create_user(username=estudiante.usua, password=password)
+                estudiante.user = user
+                estudiante.save()
 
-            login(request, user)  # Inicia sesión automáticamente después del registro
-            return redirect('index')  # Cambia 'home' por la URL deseada después del registro
+                group, created = Group.objects.get_or_create(name='Estudiantes')
+                user.groups.add(group)
+
+                login(request, user)
+                return redirect('index')
+            else:
+                messages.error(request, 'Las contraseñas no coinciden. Por favor, inténtalo de nuevo.')
+
     else:
         form = EstudianteForm()
+    
     return render(request, 'register.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            login(request, form.get_user())
-            return redirect('index')  # Redirige a la página de inicio después de iniciar sesión
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('index')  # Redirige a la página de inicio después de iniciar sesión
+            else:
+                messages.error(request, 'Usuario o contraseña incorrectos. Inténtalo de nuevo.')  # Agrega un mensaje de error
+        else:
+            messages.error(request, 'Usuario o contraseña incorrectos. Inténtalo de nuevo.')  # Agrega un mensaje de error
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -119,6 +120,7 @@ def correctorGramatica(request):
     texto_original = None
     respuestaRecibida = False  # Inicializar la variable
     estudiante = None
+    mensaje_error = None  # Inicializar el mensaje de error
 
     if request.user.is_authenticated:
         user = request.user
@@ -128,26 +130,59 @@ def correctorGramatica(request):
     if request.method == 'POST':
         # Verifica si el formulario se envió correctamente
         if 'texto' in request.POST:
-            input_text = request.POST.get('texto', '')
+            input_text = request.POST.get('texto', '').strip()  # Elimina espacios en blanco
             texto_original = input_text
-            output = corregir_gramatica(input_text)
-            if isinstance(output, list) and len(output) > 0:
-                resultado = output[0].get('generated_text', '')
-                respuestaRecibida = bool(resultado)  # Actualizar la variable
 
-                # Si hay un estudiante autenticado, incrementa TaGramar
-                if estudiante:
-                    estudiante.TaGramar += 1
-                    estudiante.save()
+            if not input_text:  # Verifica si el campo está vacío
+                messages.error(request, 'Por favor, ingresa texto en el campo.')
+            else:
+                output = corregir_gramatica(input_text)
+                if isinstance(output, list) and len(output) > 0:
+                    resultado = output[0].get('generated_text', '')
+                    respuestaRecibida = bool(resultado)  # Actualizar la variable
 
-    return render(request, 'correctorGramatica.html', {'resultado': resultado, 'texto_original': texto_original, 'respuestaRecibida': respuestaRecibida, 'estudiante': estudiante})
+                    # Si hay un estudiante autenticado, incrementa TaGramar
+                    if estudiante:
+                        estudiante.TaGramar += 1
+                        estudiante.save()
 
+    return render(request, 'correctorGramatica.html', {'resultado': resultado, 'texto_original': texto_original, 'respuestaRecibida': respuestaRecibida, 'estudiante': estudiante, 'mensaje_error': mensaje_error})
 
 
 def corregir_gramatica(input_text):
     payload = {"inputs": input_text}
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
+
+from django.contrib import messages  # Importa messages
+
+def qa_index(request):
+    respuesta = None
+    estudiante = None
+    
+    if request.user.is_authenticated:
+        user = request.user
+        if user.groups.filter(name='Estudiantes').exists():
+            estudiante = Estudiante.objects.get(usua=user.username)
+    
+    if request.method == 'POST':
+        contexto = request.POST.get('contexto', '').strip()  # Obtiene el valor y elimina espacios en blanco
+        pregunta = request.POST.get('pregunta', '').strip()  # Obtiene el valor y elimina espacios en blanco
+
+        # Verifica si se ingresó texto en ambos campos
+        if not contexto or not pregunta:
+            messages.error(request, 'Por favor, ingresa texto en ambos campos.')
+        else:
+            respuesta = hacer_pregunta(contexto, pregunta)
+            
+            # Si hay un estudiante autenticado y la respuesta no está vacía, incrementa TaPreguntas
+            if estudiante and respuesta:
+                estudiante.TaPreguntas += 1
+                estudiante.save()
+            
+    return render(request, 'qa_index.html', {'respuesta': respuesta, 'estudiante': estudiante})
+
+
 
 def hacer_pregunta(contexto, pregunta):
     payload = {
@@ -165,6 +200,8 @@ def hacer_pregunta(contexto, pregunta):
         answer = "No se pudo obtener una respuesta"
 
     return answer
+
+
 
 def get_youtube_videos(channel_id, max_results=10):
     youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
@@ -187,22 +224,4 @@ def get_youtube_videos(channel_id, max_results=10):
 
 
 
-def qa_index(request):
-    respuesta = None
-    estudiante = None
-    
-    if request.user.is_authenticated:
-        user = request.user
-        if user.groups.filter(name='Estudiantes').exists():
-            estudiante = Estudiante.objects.get(usua=user.username)
-    
-    if request.method == 'POST':
-        contexto = request.POST.get('contexto', '')
-        pregunta = request.POST.get('pregunta', '')
-        respuesta = hacer_pregunta(contexto, pregunta)
-        
-        # Si hay un estudiante autenticado, incrementa TaGramar
-        if estudiante:
-            incrementar_preg(request, estudiante.usua)
-            
-    return render(request, 'qa_index.html', {'respuesta': respuesta, 'estudiante': estudiante})
+

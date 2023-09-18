@@ -21,8 +21,11 @@
         </div>
 
         <div class="alert alert-info mt-4" style="font-size: 14px;">
-            <p>Bienvenido al módulo de Preguntas y Respuestas. Aquí puedes realizar preguntas en base a un contexto o párrafo dado. Ingresa el párrafo en el campo "Contexto" y la pregunta que deseas realizar en el campo "Pregunta". Luego, presiona el botón "Responder" para obtener la respuesta.</p>
-            <p>Recuerda que las respuestas se generan en función del contexto proporcionado, por lo que es importante asegurarse de que la pregunta esté relacionada con el contexto para obtener resultados precisos.</p>
+            <p>Bienvenido al módulo de Preguntas y Respuestas. Aquí puedes realizar preguntas en base a un contexto o párrafo dado. 
+                Ingresa el párrafo en el campo "Contexto" y la pregunta que deseas realizar en el campo "Pregunta". 
+                Luego, presiona el botón "Responder" para obtener la respuesta.</p>
+            <p>Recuerda que las respuestas se generan en función del contexto proporcionado, por lo que es 
+                importante asegurarse de que la pregunta esté relacionada con el contexto para obtener resultados precisos.</p>
         </div>
 
         <div class="bg-light p-3 rounded-bottom mt-3 myBorder">
@@ -45,6 +48,13 @@
                     </form>
                 </div>
                 <div class="col-md-6 justify-content-center">
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <h7{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: red;">{{ message }}</h7>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                     {% if respuesta %}
                     <div class="mt-4">
                         <div class="bg-info rounded text-white p-3 mt-4">
