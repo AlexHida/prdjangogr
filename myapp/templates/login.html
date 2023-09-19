@@ -6,6 +6,7 @@
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 </head>
 <body>
     {% include 'navLogin.html' %}
@@ -32,9 +33,17 @@
             </div>
             <div class="col-md-12">
                 <label for="{{ form.password.id_for_label }}">Contraseña:</label>
-                <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" 
-                class="form-Mycontrol {% if form.password.errors %}error{% endif %}" placeholder="Ingrese la contraseña">
+                <div class="input-group">
+                    <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" 
+                    class="form-Mycontrol {% if form.password.errors %}error{% endif %}" placeholder="Ingrese la contraseña">
+                    <div class="input-group-append" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                        <span class="input-group-text" id="show-password" style="cursor: pointer;">
+                            <i class="fas fa-eye-slash fa-lg" id="password-icon"></i>
+                        </span>
+                    </div>
+                </div>
             </div>
+            
             <div class="row d-grid justify-content-center align-items-center mt-3">
             <button  class="btn btn-primary" type="submit">Iniciar Sesión</button>
             </div>
@@ -47,5 +56,22 @@
 
      </div>
     </div>
+    <script>
+        const passwordInput = document.getElementById("{{ form.password.id_for_label }}");
+        const passwordIcon = document.getElementById("password-icon");
+    
+        document.getElementById("show-password").addEventListener("click", function () {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                passwordIcon.classList.remove("fas", "fa-eye-slash");
+                passwordIcon.classList.add("fas", "fa-eye");
+            } else {
+                passwordInput.type = "password";
+                passwordIcon.classList.remove("fas", "fa-eye");
+                passwordIcon.classList.add("fas", "fa-eye-slash");
+            }
+        });
+    </script>
+    
 </body>
 </html>
