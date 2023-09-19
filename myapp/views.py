@@ -118,9 +118,9 @@ def ayuda(request):
 def correctorGramatica(request):
     resultado = None
     texto_original = None
-    respuestaRecibida = False  # Inicializar la variable
+    respuestaRecibida = False
     estudiante = None
-    mensaje_error = None  # Inicializar el mensaje de error
+    mensaje_error = None
 
     if request.user.is_authenticated:
         user = request.user
@@ -128,26 +128,33 @@ def correctorGramatica(request):
             estudiante = Estudiante.objects.get(usua=user.username)
 
     if request.method == 'POST':
-        # Verifica si el formulario se envió correctamente
-        if 'texto' in request.POST:
-            input_text = request.POST.get('texto', '').strip()  # Elimina espacios en blanco
-            texto_original = input_text
+        input_text = request.POST.get('texto', '').strip()
+        texto_original = input_text
 
-            if not input_text:  # Verifica si el campo está vacío
-                messages.error(request, 'Por favor, ingresa texto en el campo.')
-            else:
-                output = corregir_gramatica(input_text)
-                if isinstance(output, list) and len(output) > 0:
-                    resultado = output[0].get('generated_text', '')
-                    respuestaRecibida = bool(resultado)  # Actualizar la variable
+        if not input_text:
+            mensaje_error = 'Por favor, ingresa texto en el campo.'
+        elif len(input_text) < 5:  # Comprueba si la longitud del texto es menor que 5
+            mensaje_error = 'Debes ingresar al menos 5 caracteres.'
 
-                    # Si hay un estudiante autenticado, incrementa TaGramar
-                    if estudiante:
-                        estudiante.TaGramar += 1
-                        estudiante.save()
+        if not mensaje_error:  # Si no hay errores, procede a la corrección
+            output = corregir_gramatica(input_text)
+            if isinstance(output, list) and len(output) > 0:
+                resultado = output[0].get('generated_text', '')
+                respuestaRecibida = bool(resultado)
 
-    return render(request, 'correctorGramatica.html', {'resultado': resultado, 'texto_original': texto_original, 'respuestaRecibida': respuestaRecibida, 'estudiante': estudiante, 'mensaje_error': mensaje_error})
+                if estudiante:
+                    estudiante.TaGramar += 1
+                    estudiante.save()
+        else:
+            messages.error(request, mensaje_error)  # Agrega el mensaje de error a las notificaciones
 
+    return render(request, 'correctorGramatica.html', {
+        'resultado': resultado,
+        'texto_original': texto_original,
+        'respuestaRecibida': respuestaRecibida,
+        'estudiante': estudiante,
+        'mensaje_error': mensaje_error,
+    })
 
 def corregir_gramatica(input_text):
     payload = {"inputs": input_text}
@@ -170,8 +177,8 @@ def qa_index(request):
         pregunta = request.POST.get('pregunta', '').strip()  # Obtiene el valor y elimina espacios en blanco
 
         # Verifica si se ingresó texto en ambos campos
-        if not contexto or not pregunta:
-            messages.error(request, 'Por favor, ingresa texto en ambos campos.')
+        if len(contexto) < 7 or len(pregunta) < 7:
+            messages.error(request, 'Por favor, ingresa al menos 7 caracteres en ambos campos.')
         else:
             respuesta = hacer_pregunta(contexto, pregunta)
             
